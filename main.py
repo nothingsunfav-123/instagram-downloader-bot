@@ -83,9 +83,6 @@ def list_users(update: Update, context: CallbackContext):
 
 # Function to log user data
 def log_user_data(user):
-    """
-    Logs or updates user data (user_id, username, first_name, timestamp) to a file.
-    """
     user_data = {
         "user_id": user.id,
         "username": user.username,

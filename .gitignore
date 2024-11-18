@@ -8,5 +8,11 @@ venv/
 
 # Temporary files
 *.log
-
+# idea file
 .idea/
+
+# users data file
+users.log
+
+# admin data file
+admin.json
