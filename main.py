@@ -28,6 +28,22 @@ USERNAME = os.getenv('INSTAGRAM_USERNAME')
 # Instaloader setup
 loader = Instaloader()
 
+USERNAME = os.getenv("INSTAGRAM_USERNAME")
+PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
+
+# Session file path
+SESSION_FILE = f"{os.getcwd()}/session-{USERNAME}"
+
+# Load or create a session
+def load_or_create_session():
+    if os.path.exists(SESSION_FILE):
+        print("🔓 Loading session file...")
+        loader.load_session_from_file(USERNAME, filename=SESSION_FILE)
+    else:
+        print("🔑 Logging in and creating a session...")
+        loader.login(USERNAME, PASSWORD)
+        loader.save_session_to_file(SESSION_FILE)
+
 # File to store user data
 USERS_LOG_FILE = "users.log"
 
@@ -137,7 +153,6 @@ def fetch_instagram_data(instagram_post):
         return None
 
     try:
-        loader.load_session_from_file(USERNAME)
         post = Post.from_shortcode(loader.context, shortcode)
         if post.is_video:
             return post.video_url
