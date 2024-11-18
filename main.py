@@ -22,27 +22,39 @@ logger = logging.getLogger(__name__)
 # Telegram Bot Token
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
-# Instagram username
+# Instagram username and password
 USERNAME = os.getenv('INSTAGRAM_USERNAME')
+PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
 
 # Instaloader setup
 loader = Instaloader()
 
-USERNAME = os.getenv("INSTAGRAM_USERNAME")
-PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
-
 # Session file path
-SESSION_FILE = f"{os.getcwd()}/session-{USERNAME}"
-
+# SESSION_FILE = f"{os.getcwd()}/session-{USERNAME}"
+SESSION_FILE = f"session-{USERNAME}.json"
 # Load or create a session
 def load_or_create_session():
     if os.path.exists(SESSION_FILE):
-        print("🔓 Loading session file...")
-        loader.load_session_from_file(USERNAME, filename=SESSION_FILE)
+        print("🔓 Loading session from cookie file...")
+        with open(SESSION_FILE, 'r') as session_file:
+            cookies = json.load(session_file)
+            loader.context._session.cookies.update(cookies)
+            try:
+                loader.test_login()
+                print("✅ Successfully loaded session.")
+            except Exception as e:
+                print(f"⚠️ Error testing session: {e}")
+                # If session is invalid, re-login with username and password
+                print("🔄 Logging in with credentials...")
+                loader.login(os.getenv("INSTAGRAM_USERNAME"), os.getenv("INSTAGRAM_PASSWORD"))
+                loader.save_session_to_file(SESSION_FILE)
+                print("🔑 Session saved.")
     else:
-        print("🔑 Logging in and creating a session...")
-        loader.login(USERNAME, PASSWORD)
+        # If no session file exists, log in and create one
+        print("🔑 No session file found. Logging in...")
+        loader.login(os.getenv("INSTAGRAM_USERNAME"), os.getenv("INSTAGRAM_PASSWORD"))
         loader.save_session_to_file(SESSION_FILE)
+        print("🔑 Session saved.")
 
 # File to store user data
 USERS_LOG_FILE = "users.log"
