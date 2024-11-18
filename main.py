@@ -30,31 +30,17 @@ PASSWORD = os.getenv("INSTAGRAM_PASSWORD")
 loader = Instaloader()
 
 # Session file path
-# SESSION_FILE = f"{os.getcwd()}/session-{USERNAME}"
-SESSION_FILE = f"session-{USERNAME}.json"
+SESSION_FILE = f"{os.getcwd()}/session-{USERNAME}"
+
 # Load or create a session
 def load_or_create_session():
     if os.path.exists(SESSION_FILE):
-        print("🔓 Loading session from cookie file...")
-        with open(SESSION_FILE, 'r') as session_file:
-            cookies = json.load(session_file)
-            loader.context._session.cookies.update(cookies)
-            try:
-                loader.test_login()
-                print("✅ Successfully loaded session.")
-            except Exception as e:
-                print(f"⚠️ Error testing session: {e}")
-                # If session is invalid, re-login with username and password
-                print("🔄 Logging in with credentials...")
-                loader.login(os.getenv("INSTAGRAM_USERNAME"), os.getenv("INSTAGRAM_PASSWORD"))
-                loader.save_session_to_file(SESSION_FILE)
-                print("🔑 Session saved.")
+        print("🔓 Loading session file...")
+        loader.load_session_from_file(USERNAME, filename=SESSION_FILE)
     else:
-        # If no session file exists, log in and create one
-        print("🔑 No session file found. Logging in...")
-        loader.login(os.getenv("INSTAGRAM_USERNAME"), os.getenv("INSTAGRAM_PASSWORD"))
+        print("🔑 Logging in and creating a session...")
+        loader.login(USERNAME, PASSWORD)
         loader.save_session_to_file(SESSION_FILE)
-        print("🔑 Session saved.")
 
 # File to store user data
 USERS_LOG_FILE = "users.log"
