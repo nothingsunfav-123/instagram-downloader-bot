@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 import re
 import os
@@ -8,7 +7,7 @@ from instaloader import Instaloader, Post
 from dotenv import load_dotenv
 import requests
 
-# Load environment variables from .env file
+# Loading environment variables from .env file
 load_dotenv()
 
 # Logger setup
@@ -18,8 +17,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Telegram Bot Token from .env file
+# Telegram Bot Token
 TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+# Instagram username
+USERNAME = os.getenv('INSTAGRAM_USERNAME')
 
 
 # Instaloader setup
@@ -51,7 +53,7 @@ def fetch_instagram_data(instagram_post):
         return None
 
     try:
-        loader.load_session_from_file('melibayevv_e')
+        loader.load_session_from_file(USERNAME)
         post = Post.from_shortcode(loader.context, shortcode)
         if post.is_video:
             return post.video_url
@@ -75,15 +77,9 @@ def download_media(url, file_name):
         logger.error(f"Error downloading media: {e}")
         return None
 
-
-# Function to handle user messages
-# Function to handle user messages
-# Function to handle user messages
 # Function to handle user messages
 def download(update: Update, context: CallbackContext):
-    """
-    Handle user messages to fetch Instagram videos/photos.
-    """
+    # Handle user messages to fetch Instagram videos/photos.
     message = update.effective_message
     instagram_post = message.text.strip()
 
@@ -91,7 +87,7 @@ def download(update: Update, context: CallbackContext):
         update.message.reply_text("❌ Invalid Instagram URL. Please send a valid post, Reel, or IGTV link.")
         return
 
-    # Send initial "Processing your request..." message
+    # Sending initial "Processing your request..." message
     processing_message = update.message.reply_text("⏳ Processing your request...")
 
     # Fetch Instagram data
@@ -100,7 +96,7 @@ def download(update: Update, context: CallbackContext):
         processing_message.edit_text("❌ Could not fetch data. Ensure the post is public and the URL is correct.")
         return
 
-    # Change to "Almost done..." after fetching data
+    # Changing to "Almost done..." after fetching data
     processing_message.edit_text("🚀 Almost done... Just a few more seconds! ⏱️")
 
     # Download media locally
@@ -111,7 +107,7 @@ def download(update: Update, context: CallbackContext):
         processing_message.edit_text("❌ Failed to download media. Please try again later.")
         return
 
-    # Send the media with bot link in the caption
+    # Sending the media with bot link in the caption
     try:
         caption = "👾 Powered by @Instasave_downloader_bot"
         if "video" in media_url:
@@ -127,18 +123,16 @@ def download(update: Update, context: CallbackContext):
                 caption=caption
             )
 
-        # Remove the "processing" messages once the media is sent
+        # Removing the "processing" messages once the media is sent
         processing_message.delete()
 
     except Exception as e:
         logger.error(f"Error sending media: {e}")
         processing_message.edit_text("❌ Failed to send media. Please try again later.")
     finally:
-        # Clean up local files
+        # Cleaning up local files
         if os.path.exists(local_file):
             os.remove(local_file)
-
-
 
 # Function to send a custom message on /start
 def start(update: Update, context: CallbackContext):
@@ -147,7 +141,6 @@ def start(update: Update, context: CallbackContext):
     \nSend me a public Instagram link, and I'll send the media for you. 🎥📸
     """
     update.message.reply_text(welcome_message)
-
 
 # Main function to run the bot
 def main():
@@ -163,7 +156,6 @@ def main():
     logger.info("Bot started and polling for updates...")
     updater.idle()
 
-
-# Run the bot
+# Runing the bot
 if __name__ == "__main__":
     main()
