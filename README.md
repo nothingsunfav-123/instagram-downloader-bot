@@ -36,7 +36,7 @@ pip install python-telegram-bot instaloader requests python-dotenv
 ```
 ### Setup
 1. Clone this repository:
-- `git clone https://github.com/yourusername/instagram-downloader-bot.git`
+- `git clone https://github.com/melibayev/instagram-downloader-bot.git`
 
 2. Create a .env file in the project directory and add your Telegram bot token:
 - TELEGRAM_BOT_TOKEN=your_telegram_bot_token
