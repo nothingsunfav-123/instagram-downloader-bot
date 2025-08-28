@@ -44,4 +44,4 @@ pip install python-telegram-bot instaloader requests python-dotenv
 - `python bot.py`
 
 ### License
-This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/melibayev/instagram-downloader-bot/blob/main/LICENCE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/nothingsunfav-123/instagram-downloader-bot) file for details.
